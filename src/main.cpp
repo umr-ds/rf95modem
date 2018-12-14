@@ -18,8 +18,7 @@ BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint8_t txValue = 0;
-
-String test="";
+String test = "";
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -45,14 +44,11 @@ class MyCallbacks : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
     {
-
         bool fullString = false;
         std::string rxValue = pCharacteristic->getValue();
-
         String cmd = rxValue.c_str();
         cmd.trim();
         cmd.toUpperCase();
-
         if(cmd.equals("END")){
             Serial.println("Vergleich erfolgreich");
             fullString = true;
@@ -61,20 +57,24 @@ class MyCallbacks : public BLECharacteristicCallbacks
            test = test + cmd; 
         }
 
-        if (fullString)
+        if (/*rxValue.length() > 0*/fullString)
         {
             Serial.println("*********");
             Serial.print("Received Value: ");
-            Serial.print(test);
-            Serial.print("***********");
+            /*for (int i = 0; i < rxValue.length(); i++)
+                Serial.print(rxValue[i]);*/
 
+            Serial.println(test);
+            Serial.println("*********");            
+            /*String cmd = rxValue.c_str();
+            cmd.trim();
+            cmd.toUpperCase();
+            handleCommand(cmd);*/
             handleCommand(test);
-            
             test = "";
             delay(10);
         }
-    }    
-    
+    }
 };
 
 void setup()
@@ -117,7 +117,7 @@ void setup()
 }
 
 void ble_print(String output)
-{
+{   
     String outputneu = output;
     while(outputneu.length() != 0){
         if (outputneu.length() > 20)
@@ -136,10 +136,15 @@ void ble_print(String output)
             delay(10);
         }
     }
-
     
+    String ende = "End";
+    pTxCharacteristic->setValue((uint8_t *)ende.c_str(), ende.length());
+    pTxCharacteristic->notify();
     delay(10);
-    
+    /* old
+    pTxCharacteristic->setValue((uint8_t *)output.c_str(), output.length());
+    pTxCharacteristic->notify();
+    delay(10);*/
 }
 
 void loop()
