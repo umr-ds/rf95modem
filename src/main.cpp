@@ -19,6 +19,7 @@ bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint8_t txValue = 0;
 String eingabe = "";
+int laenge = 0;
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -49,13 +50,37 @@ class MyCallbacks : public BLECharacteristicCallbacks
         String cmd = rxValue.c_str();
         cmd.trim();
         cmd.toUpperCase();
-        if(cmd.equals("END")){
+
+        if(laenge == 0){
+            //*2 kommt daher, das eine Byte = 2 Hexazahlen sind. Wir nutzen unten aber .length().
+            //Die + 6 sind AT+TX=, da dies ja nicht mitgeschickt wird.
+            //Die übertragene länge, ist die Anzahl der Hex-Zahlen, und somit auch die Anzahl der zu schickenden Bytes.
+            laenge = cmd.toInt() * 2 + 6;
+            if(laenge > 508){
+                Serial.println("Die Nachricht ist zu lang.");
+            }
+            Serial.println(laenge);
+        }
+        else{
+            if(laenge == eingabe.length() + cmd.length()){
+                eingabe += cmd;
+                Serial.println(eingabe.length());
+                fullString = true;
+                laenge = 0;
+            }
+            else{
+                eingabe += cmd;
+                Serial.println(eingabe.length());
+            }
+        }
+
+        /*if(cmd.equals("END")){
             Serial.println("Vergleich erfolgreich");
             fullString = true;
         }
         else {
            eingabe += cmd; 
-        }
+        }*/
 
         if (fullString)
         {
@@ -129,11 +154,6 @@ void ble_print(String output)
             delay(10);
         }
     }
-    
-    String ende = "End";
-    pTxCharacteristic->setValue((uint8_t *)ende.c_str(), ende.length());
-    pTxCharacteristic->notify();
-    delay(10);
 }
 
 void loop()
