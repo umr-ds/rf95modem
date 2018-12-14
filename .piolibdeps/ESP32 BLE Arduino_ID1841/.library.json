@@ -1,0 +1,45 @@
+{
+    "name": "ESP32 BLE Arduino", 
+    "version": "1.0.1", 
+    "keywords": [
+        "communication"
+    ], 
+    "description": "BLE functions for ESP32", 
+    "frameworks": [
+        "arduino"
+    ], 
+    "platforms": [
+        "espressif32"
+    ], 
+    "authors": [
+        {
+            "email": "kolban1@kolban.com", 
+            "url": null, 
+            "maintainer": false, 
+            "name": "Neil Kolban"
+        }, 
+        {
+            "email": "esp32@esp32.eu.org", 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Dariusz Krempa"
+        }
+    ], 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/nkolban/ESP32_BLE_Arduino"
+    }, 
+    "homepage": null, 
+    "export": {
+        "include": null, 
+        "exclude": [
+            "extras", 
+            "docs", 
+            "tests", 
+            "test", 
+            "*.doxyfile", 
+            "*.pdf"
+        ]
+    }, 
+    "id": 1841
+}

@@ -18,7 +18,7 @@ BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint8_t txValue = 0;
-String test = "";
+String eingabe = "";
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -54,24 +54,17 @@ class MyCallbacks : public BLECharacteristicCallbacks
             fullString = true;
         }
         else {
-           test = test + cmd; 
+           eingabe += cmd; 
         }
 
-        if (/*rxValue.length() > 0*/fullString)
+        if (fullString)
         {
             Serial.println("*********");
             Serial.print("Received Value: ");
-            /*for (int i = 0; i < rxValue.length(); i++)
-                Serial.print(rxValue[i]);*/
-
-            Serial.println(test);
-            Serial.println("*********");            
-            /*String cmd = rxValue.c_str();
-            cmd.trim();
-            cmd.toUpperCase();
-            handleCommand(cmd);*/
-            handleCommand(test);
-            test = "";
+            Serial.println(eingabe);
+            Serial.println("*********");
+            handleCommand(eingabe);
+            eingabe = "";
             delay(10);
         }
     }
@@ -141,10 +134,6 @@ void ble_print(String output)
     pTxCharacteristic->setValue((uint8_t *)ende.c_str(), ende.length());
     pTxCharacteristic->notify();
     delay(10);
-    /* old
-    pTxCharacteristic->setValue((uint8_t *)output.c_str(), output.length());
-    pTxCharacteristic->notify();
-    delay(10);*/
 }
 
 void loop()
