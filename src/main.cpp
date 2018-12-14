@@ -51,6 +51,8 @@ class MyCallbacks : public BLECharacteristicCallbacks
         cmd.trim();
         cmd.toUpperCase();
 
+        //Man muss zuerst in einer Nachricht, die Länge schreiben (max 251) und dann kann man AT+TX= senden,
+        //sowie den Rest der NAchricht
         if(laenge == 0){
             //*2 kommt daher, das eine Byte = 2 Hexazahlen sind. Wir nutzen unten aber .length().
             //Die + 6 sind AT+TX=, da dies ja nicht mitgeschickt wird.
