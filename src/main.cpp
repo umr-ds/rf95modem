@@ -52,19 +52,24 @@ class MyCallbacks : public BLECharacteristicCallbacks
         cmd.toUpperCase();
 
         //Man muss zuerst in einer Nachricht, die Länge schreiben (max 251) und dann kann man AT+TX= senden,
-        //sowie den Rest der NAchricht
+        //sowie den Rest der Nachricht
         if(laenge == 0){
-            //*2 kommt daher, das eine Byte = 2 Hexazahlen sind. Wir nutzen unten aber .length().
             //Die + 6 sind AT+TX=, da dies ja nicht mitgeschickt wird.
             //Die übertragene länge, ist die Anzahl der Hex-Zahlen, und somit auch die Anzahl der zu schickenden Bytes.
-            laenge = cmd.toInt() * 2 + 6;
+            laenge = cmd.toInt() + 6;
             if(laenge > 508){
                 Serial.println("Die Nachricht ist zu lang.");
             }
             Serial.println(laenge);
         }
         else{
-            if(laenge == eingabe.length() + cmd.length()){
+            eingabe += cmd;
+            Serial.println(eingabe.length());
+            if(laenge == eingabe.length()){
+                fullString = true;
+                laenge = 0;
+            }
+            /*if(laenge == eingabe.length() + cmd.length()){
                 eingabe += cmd;
                 Serial.println(eingabe.length());
                 fullString = true;
@@ -73,7 +78,7 @@ class MyCallbacks : public BLECharacteristicCallbacks
             else{
                 eingabe += cmd;
                 Serial.println(eingabe.length());
-            }
+            }*/
         }
 
         /*if(cmd.equals("END")){
